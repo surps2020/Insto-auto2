@@ -5,6 +5,7 @@ import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.List;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -16,7 +17,9 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.wholesale.app.dao.AccountListDao;
+import com.wholesale.app.dao.AccountTranscationDao;
 import com.wholesale.app.model.AccountList;
+import com.wholesale.app.model.AccountTranscation;
 import com.wholesale.app.service.AccountService;
 
 @RunWith(SpringRunner.class)
@@ -28,12 +31,25 @@ class InstoAuto1ApplicationTests {
 	@MockBean
 	private AccountListDao accountListDao;
 	
+	@MockBean
+	private AccountTranscationDao accountTranscationDao;
+	
 	@SuppressWarnings("deprecation")
 	@Test
 	public void getAccountListTest()
 	{
 		when(accountListDao.findAllAccountList()).thenReturn(Stream.of(new AccountList(585309209, "SGSavings726", "Saving", new Date(2000, 11, 21), "SGD", new BigDecimal("110.03")),new AccountList(791066619, "AUSavings933", "Saving", new Date(2000, 11, 21), "SGD", new BigDecimal("220.03"))).collect(Collectors.toList()));
 		assertEquals(2, accountService.getAllAccountList().size());
+	}
+	
+	@Test
+	public void getAccountTranscationTest()
+	{
+		
+		int accountNumber=585309209;
+		when(accountTranscationDao.findAllTranscationById(accountNumber)).thenReturn((List<AccountTranscation>) Stream.of(new AccountTranscation(1234,585309209, "SavingAccount", new Date(2000, 11, 21), "SGD",new BigDecimal("110.03"), new BigDecimal("110.03"), "Credit", "")).collect(Collectors.toList()));
+				assertEquals(2, accountService.getAllAccountList().size());
+		
 	}
 
 }
